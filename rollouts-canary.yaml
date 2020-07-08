@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: users-rollout-canary
+  namespace: arge-rollouts-demo
+spec:
+  strategy:
+    canary:
+      steps:
+      - setWeight: 5
+      - pause:
+          duration: 10m
+      canaryService: users # required
+      stableService: users  # required
+      trafficRouting:
+        istio:
+           virtualService: 
+            name: users  # required
+            routes:
+            - traffic-default # At least one route is required
